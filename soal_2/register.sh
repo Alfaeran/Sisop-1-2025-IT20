@@ -6,9 +6,9 @@ db_path="data/player_data.csv"
 salt="IT-20-rawrrrr!"
 
 if [ ! -d "$db_directory" ]; then
-    echo "Directory $DB_DIR does not exist. Creating..."
+    echo "Directory $db_directory does not exist. Creating..."
     mkdir -p "$db_directory"
-    echo "Directory $DB_DIR created."
+    echo "Directory $db_dikrectory created."
 fi
 
 if [ ! -f "$db_path" ]; then
