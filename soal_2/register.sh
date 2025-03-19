@@ -8,7 +8,7 @@ salt="IT-20-rawrrrr!"
 if [ ! -d "$db_directory" ]; then
     echo "Directory $db_directory does not exist. Creating..."
     mkdir -p "$db_directory"
-    echo "Directory $db_dikrectory created."
+    echo "Directory $db_directory created."
 fi
 
 if [ ! -f "$db_path" ]; then
