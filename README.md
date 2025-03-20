@@ -198,7 +198,7 @@ echo "Registration successful! Im waiting for you to come soldier!"
 register.player
 ```        
 
-- Memeriksa, membuat, lalu menyimpan database player yanf berisi email,username,password di /data/player_data.csv
+- Memeriksa, membuat, lalu menyimpan database player yang berisi email,username,password di /data/player_data.csv
   ```
   db_directory="data"
   db_path="data/player_data.csv"  
@@ -521,7 +521,7 @@ crontab.menu
 
 }
 ```
--Fungsi add/remove ram
+- Fungsi add/remove ram
 ```
 add_ram_monitor() {
 (crontab -l 2>/dev/null; echo "$interval bash $script_ram_monitor >> /home/auriga/Documents/Praktikum_sisop-MODUL1/soal_2/logs/fragment.log") | crontab -
