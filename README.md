@@ -720,9 +720,96 @@ done
 code ini menampilkan daftar 10 proses yang menggunakan memori terbesar di sistem, lalu memperbaruinya setiap detik.
 
 
+
 **Revisi**
 
-pada bagian **'e. Brain Damage'** merubah tampilannya menjadi kustomisasi yang sebelumnnya masih tampilan secara deafult atau tanpa custom
+**-** Pada bagian **'e. Brain Damage'** merubah tampilannya menjadi kustomisasi yang sebelumnnya masih tampilan secara deafult atau tanpa custom
+
+```
+brain_damage() {
+while true; do
+clear
+echo -e "\e[33m============================================================>
+echo "PID     USER       %CPU   %MEM   COMMAND"
+echo -e "\e[33m============================================================>
+ps aux --sort=-%mem | head -n 10 | awk '{
+color = (NR % 2 == 0) ? "\033[35m" : "\033[36m";
+printf "%s%-7s %-10s %-6s %-6s %-s\033[0m\n", color, $2, $1, $3, $4, $11
+}'
+sleep 1
+done
+}
+```
+
+sekarang tampilannya berubah dengan garis pemisah berwarna kuning di bagian atas dan bawah diantara "PID     USER       %CPU   %MEM   COMMAND", serta setiap baris proses ditampilkan dengan warna selang-seling yakni biru dan ungu.
+
+
+**- Menambahkan bagian yang belum selesai yakni b. On the Run dan e. Money**
+
+**b. On the Run**
+```
+on_the_run() {
+echo "wait"
+
+bar_length=50
+total_steps=100
+
+for ((i = 1; i <= total_steps; i++)); do
+sleep_time=$(shuf -i 1-10 -n 1)
+sleep "$(echo "scale=1; $sleep_time / 10" | bc)"
+
+rockets=$((i * bar_length / total_steps))
+echo -ne "\r["
+
+for ((j = 0; j < rockets; j++)); do
+echo -ne "🚀"
+done
+
+for ((j = rockets; j < bar_length; j++)); do
+echo -ne " "
+done
+
+echo -ne "] $i%"
+done
+echo -e "\nDone!!!"
+}
+```
+
+Kode ini menampilkan sebuah progress bar di terminal yang bergerak secara acak dalam rentang waktu 0.1 detik sampai 1 detik yang mulai bergerak dari 0% hingga 100% dengan emoji 🚀 yang bertambah seiring waktu. 
+
+
+**e. Money**
+
+```
+money() {
+clear
+echo -e "\e[32mMoney - Currency Matrix\e[0m"
+symbols=('$' '€' '£' '¥' '¢' '₹' '₩' '₿' '₣')
+cols=$(tput cols)
+lines=$(tput lines)
+
+declare -a matrix
+for ((i = 0; i < cols; i++)); do
+matrix[$i]=0
+done
+
+trap "clear; exit" SIGINT
+
+while true; do
+for ((i = 0; i < cols; i++)); do
+if (( RANDOM % 10 > 7 )); then
+rand_sym=${symbols[RANDOM % ${#symbols[@]}]}
+matrix[$i]=$(( (matrix[$i] + 1) % lines ))
+echo -ne "\e[32m\033[${matrix[$i]};${i}H$rand_sym\e[0m"
+fi
+done
+
+sleep 0.05
+done
+}
+```
+
+code ini menampilkan efek Currency Matrix di terminal, di mana simbol mata uang seperti $ € £ ¥ ¢ ₹ ₩ ₿ ₣ dan lainnya jatuh secara acak dari atas ke bawah dengan tampilan berwarna hijau. Code ini menggunakan array untuk menyimpan posisi simbol di setiap kolom lalu **tput cols dan tput lines** digunakan agar jumlah kolom dan baris menyesuaikan ukuran terminal secara otomatis.
 
 
 # Soal 4
