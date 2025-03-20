@@ -96,8 +96,47 @@ Untuk kode, menggunakan fungsi continue sehingga setelah kita menjalankan dan me
 *tinggal diisi*
 
 # Soal 3
+Membuat file bernama dsotm.sh kemudian membuat script Bash bertema album The Dark Side of the Moon (Pink Floyd) dengan lima lagu pilihan:
+1. Speak to Me – Menampilkan kata-kata afirmasi dari API setiap detik
+2. On the Run – Menampilkan progress bar yang berjalan dengan interval random
+3. Time – Menampilkan jam yang diperbarui setiap detik
+4. Money – Menampilkan efek mirip cmatrix, tetapi menggunakan simbol mata uang
+5. Brain Damage – Menampilkan daftar proses yang sedang berjalan seperti task manager yang diperbarui setiap detik
+Program harus membersihkan terminal sebelum berjalan dan dijalankan dengan format. **./dsotm.sh --play="<Track>"**
+```
+$#!/bin/bash
 
-tinggal diisi*
+clear
+
+if [ $# -eq 0 ]; then
+echo "ketik: ./dsotm.sh --play=\"<Track>\""
+echo "Pilih Track yang tersedia:"
+echo -e "\e[33m- Speak to Me\e[0m"
+echo -e "\e[33m- Time\e[0m"
+echo -e "\e[33m- Brain Damage\e[0m"
+exit 1
+fi
+track=$(echo "$1" | awk -F= '{print $2}' | tr -d '"')
+```
+code tersebut berfungsi untuk memeriksa apakah pengguna sudah memasukkan lagu yang mau dijalankan atau belum. Kalau nggak ada input, script bakal muncul dan ngasih tahu cara pakainya dan juga daftar lagu yang bisa dipilih. Kalau ada input, kode bakal ngambil nama lagunya dari argumen yang diketik, biar bisa diproses lebih lanjut di script.
+
+**a. Speak to Me**
+```
+speak_to_me() {
+echo -e "\e[33mPlaying Speak to Me\e[0m"
+
+while true; do
+affirmation=$(curl -s -H "Accept: application/json" "https://www.affirmations.dev" | grep -o '"affirmation":"[^"]*"' | sed 's/"affirmation":"//;s/"//')
+
+echo "$affirmation"
+
+sleep 1
+
+done
+}
+```
+Kode ini menjalankan fitur Speak to Me, yang pertama-tama akan menampilkan teks "Playing Speak to Me" dalam warna kuning. Setelah itu, program akan terus mengambil kata-kata afirmasi dari API affirmations.dev setiap satu detik dan menampilkannya di terminal. Proses ini berjalan tanpa henti sampai pengguna menghentikannya secara manual
+
 
 # Soal 4
 Membuat file bernama pokemon_analysis.sh dan mendownload file data dari soal bernama pokemon_usage.csv
