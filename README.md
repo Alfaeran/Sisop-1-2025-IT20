@@ -668,7 +668,9 @@ exit 1
 fi
 track=$(echo "$1" | awk -F= '{print $2}' | tr -d '"')
 ```
+
 code tersebut berfungsi untuk memeriksa apakah pengguna sudah memasukkan lagu yang mau dijalankan atau belum. Kalau nggak ada input, script bakal muncul dan ngasih tahu cara pakainya dan juga daftar lagu yang bisa dipilih. Kalau ada input, kode bakal ngambil nama lagunya dari argumen yang diketik, biar bisa diproses lebih lanjut di script.
+
 
 **a. Speak to Me**
 ```
@@ -685,7 +687,42 @@ sleep 1
 done
 }
 ```
+
 Kode ini menjalankan fitur Speak to Me, yang pertama-tama akan menampilkan teks "Playing Speak to Me" dalam warna kuning. Setelah itu, program akan terus mengambil kata-kata afirmasi dari API affirmations.dev setiap satu detik dan menampilkannya di terminal. Proses ini berjalan tanpa henti sampai pengguna menghentikannya secara manual
+
+
+**c. Time**
+```
+time_track() {
+echo "⏳ Live Clock ⏳"
+
+while true; do
+echo -ne "\r📅 $(date '+%Y-%m-%d | %H:%M:%S') ⏰"
+sleep 1
+done
+}
+```
+
+code ini akan menampilkan waktu secara real-time di terminal. Program mencetak teks **"⏳ Live Clock ⏳"** sebagai judul. Setelah itu, dalam loop tanpa henti program akan terus memperbarui tanggal dan waktu setiap detik menggunakan perintah date, lalu mencetaknya dalam format YYYY-MM-DD | HH:MM:SS. Tanda \r memastikan bahwa tampilan diperbarui di baris yang sama tanpa membuat baris baru.
+
+
+**e.Brain Damage**
+```
+brain_damage() {
+while true; do
+clear
+ps aux --sort=-%mem | head -n 10
+sleep 1
+done
+}
+```
+
+code ini menampilkan daftar 10 proses yang menggunakan memori terbesar di sistem, lalu memperbaruinya setiap detik.
+
+
+**Revisi**
+
+pada bagian **'e. Brain Damage'** merubah tampilannya menjadi kustomisasi yang sebelumnnya masih tampilan secara deafult atau tanpa custom
 
 
 # Soal 4
