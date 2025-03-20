@@ -92,9 +92,10 @@ Genre paling populer di Asia setelah tahun 2023 adalah: Mystery sebanyak 14 buku
 Untuk kode, menggunakan fungsi continue sehingga setelah kita menjalankan dan memilih salah satu opsi akan terus berlanjut hingga pengguna memilih exit.
 
 # Soal 2
+
 **a.** Membuat dua shell script, login.sh dan register.sh, yang dimana database “Player” disimpan di /data/player_data.csv. Untuk register, parameter yang dipakai yaitu email, username, dan password. Untuk login, parameter yang dipakai yaitu email dan password.
 
-##register.sh
+## register.sh
 ```
 #!/bin/bash
 
