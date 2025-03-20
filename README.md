@@ -376,7 +376,7 @@ else
 	((attempt++))
 fi
 ```
-- **core_monitor.sh
+- **core_monitor.sh**
 ```
 #!/bin/bash
 
