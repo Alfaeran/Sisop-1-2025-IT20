@@ -6,8 +6,8 @@ CYAN='\033[1;36m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-script_cpu_monitor="./script/cpu_monitor.sh"
-script_ram_monitor="./script/frag_monitor.sh"
+script_cpu_monitor="/home/auriga/Documents/Praktikum_sisop-MODUL1/soal_2/script/core_monitor.sh"
+script_ram_monitor="/home/auriga/Documents/Praktikum_sisop-MODUL1/soal_2/script/frag_monitor.sh"
 
 interval="* * * * *"
 
@@ -52,7 +52,7 @@ case $option in
 }
 
 add_cpu_monitor(){
-(crontab -l 2>/dev/null; echo "$interval bash $script_cpu_monitor") | crontab -
+(crontab -l 2>/dev/null; echo "$interval bash $script_cpu_monitor  >> /home/auriga/Documents/Praktikum_sisop-MODUL1/soal_2/logs/core.log") | crontab -
 echo -e "${GREEN}CPU monitoring added!${NC}"
 sleep 1
 crontab.menu
@@ -60,7 +60,7 @@ crontab.menu
 }
 
 add_ram_monitor() {
-(crontab -l 2>/dev/null; echo "$interval bash $script_ram_monitor") | crontab -
+(crontab -l 2>/dev/null; echo "$interval bash $script_ram_monitor >> /home/auriga/Documents/Praktikum_sisop-MODUL1/soal_2/logs/fragment.log") | crontab -
 echo -e "${GREEN}RAM monitoring added!${NC}"
 sleep 1
 crontab.menu
