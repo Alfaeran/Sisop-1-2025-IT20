@@ -93,7 +93,11 @@ Untuk kode, menggunakan fungsi continue sehingga setelah kita menjalankan dan me
 
 # Soal 2
 
+*tinggal diisi*
+
 # Soal 3
+
+tinggal diisi*
 
 # Soal 4
 Membuat file bernama pokemon_analysis.sh dan mendownload file data dari soal bernama pokemon_usage.csv
