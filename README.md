@@ -92,8 +92,557 @@ Genre paling populer di Asia setelah tahun 2023 adalah: Mystery sebanyak 14 buku
 Untuk kode, menggunakan fungsi continue sehingga setelah kita menjalankan dan memilih salah satu opsi akan terus berlanjut hingga pengguna memilih exit.
 
 # Soal 2
+**a.** Membuat dua shell script, login.sh dan register.sh, yang dimana database “Player” disimpan di /data/player_data.csv. Untuk register, parameter yang dipakai yaitu email, username, dan password. Untuk login, parameter yang dipakai yaitu email dan password.
 
-*tinggal diisi*
+##register.sh
+```
+#!/bin/bash
+
+db_directory="data"
+db_path="data/player_data.csv"
+
+salt="IT-20-rawrrrr!"
+
+if [ ! -d "$db_directory" ]; then
+    echo "Directory $db_directory does not exist. Creating..."
+    mkdir -p "$db_directory"
+    echo "Directory $db_directory created."
+fi
+
+if [ ! -f "$db_path" ]; then
+    echo "email,username,password" > "$db_path"
+fi
+
+register.player(){
+
+validate_email() {
+    if [[ "$1" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+validate_password() {
+    if [[ ${#1} -lt 8 ]]; then
+        echo "Password must be at least 8 characters long."
+        return 1
+    elif ! [[ "$1" =~ [A-Z] ]]; then
+        echo "Password must contain at least one uppercase letter."
+       return 1
+    elif ! [[ "$1" =~ [0-9] ]]; then
+        echo "Password must contain at least one number."
+        return 1
+    else
+        return 0
+    fi
+}
+
+hashing(){
+echo -n "$1$salt" | sha256sum | awk '{print $1}'
+
+}
+
+generate_id (){
+max_id=$(tail -n +2 "$db_path" | cut -d ',' -f1 | sort -n | tail -n 1)
+    if [ -z "$max_id" ]; then
+    echo "1"
+
+    else
+        echo $((max_id + 1))
+    fi
+
+}
+
+echo "Enter your email:"
+read email
+
+if ! validate_email "$email"; then
+    echo "Invalid email format. Please enter a valid email address."
+    return 1
+fi
+
+echo "Enter your username:"
+read username
+
+if grep -q "$email" "$db_path"; then
+    echo "This email is already registered. Please log in instead."
+     sleep 1
+	./terminal.sh
+fi
+
+while true; do
+    echo "Enter your password:"
+    read -s password
+    if ! validate_password "$password"; then
+        echo "Please try again."
+    else
+        break
+    fi
+done
+
+hashed_password=$(hashing "$password")
+
+player_id=$(generate_id)
+
+if grep -q "$email" "$db_path"; then
+    echo "Email already registered. Please use a different email."
+    exit 1
+fi
+
+echo "$player_id,$email,$username,$hashed_password" >> "$db_path"
+echo "Registration successful! Im waiting for you to come soldier!"
+}
+
+register.player
+```        
+
+- Memeriksa, membuat, lalu menyimpan database player yanf berisi email,username,password di /data/player_data.csv
+  ```
+  db_directory="data"
+  db_path="data/player_data.csv"  
+  if [ ! -d "$db_directory" ]; then
+    echo "Directory $db_directory does not exist. Creating..."
+    mkdir -p "$db_directory"
+    echo "Directory $db_directory created."
+  fi
+
+  if [ ! -f "$db_path" ]; then
+            echo "email,username,password" > "$db_path"
+  fi
+  ```
+**b.** Fungsi validasi email yang dimana user harus memasukan email ....@.... , jika tidak maka user harus mencoba kembali input email
+  ```
+  validate_email() {
+    if [[ "$1" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
+        return 0
+    else
+        return 1
+    fi
+  }
+  ```
+**b.** Fungsi validasi password yang dimana password harus memuat minimal 8 karakter, minimal 1 uppercase alphabet, dan minimal 1 angka.
+  ```
+  validate_password() {
+    if [[ ${#1} -lt 8 ]]; then
+        echo "Password must be at least 8 characters long."
+        return 1
+    elif ! [[ "$1" =~ [A-Z] ]]; then
+        echo "Password must contain at least one uppercase letter."
+       return 1
+    elif ! [[ "$1" =~ [0-9] ]]; then
+        echo "Password must contain at least one number."
+        return 1
+    else
+        return 0
+    fi
+  }
+  ```
+**c.** Memeriksa apakah email yang didaftarkan sudah ada di database atau belum, jika belum makan input user akan masuk ke database player /data/player_data.csv.
+
+- Membaca input email, username, password dari user dan memeriksa format password yang di input oleh user menggunakan fungsi validasi password.
+```
+  echo "Enter your email:"
+  read email
+        
+  if ! validate_email "$email"; then
+       echo "Invalid email format. Please enter a valid email address."
+       return 1
+  fi
+        
+  echo "Enter your username:"
+  read username
+        
+  if grep -q "$email" "$db_path"; then
+      echo "This email is already registered. Please log in instead."
+       sleep 1
+          ./terminal.sh
+  fi
+        
+        while true; do
+            echo "Enter your password:"
+            read -s password
+            if ! validate_password "$password"; then
+                echo "Please try again."
+            else
+                break
+            fi
+        done
+if grep -q "$email" "$db_path"; then
+    echo "Email already registered. Please use a different email."
+    exit 1
+fi
+
+echo "$player_id,$email,$username,$hashed_password" >> "$db_path"
+echo "Registration successful! Im waiting for you to come soldier!"
+}
+register.player
+  ```
+**d.** Mengenkripsi password dengan fungsi hashing Menggabungkan nilai input dengan string "salt" untuk meningkatkan keamanan menggunakan sha256sum dan fungsi generate id untuk mengambil kolom pertama yang akan diisi ID.
+  ```
+  salt="IT-20-rawrrrr!"
+  hashing(){
+  echo -n "$1$salt" | sha256sum | awk '{print $1}'
+
+  }
+
+  generate_id (){
+  max_id=$(tail -n +2 "$db_path" | cut -d ',' -f1 | sort -n | tail -n 1)
+    if [ -z "$max_id" ]; then
+    echo "1"
+
+    else
+        echo $((max_id + 1))
+    fi
+
+  }
+
+hashed_password=$(hashing "$password")
+
+player_id=$(generate_id)
+  ```
+## login.sh
+```
+#!/bin/bash
+
+db_directory="data"
+db_path="$db_directory/player_data.csv"
+
+salt="IT-20-rawrrrr!"
+
+player.login (){
+
+if [ ! -f "$db_path" ]; then
+    echo "No users have registered yet."
+    sleep 1
+fi
+
+
+hashing() {
+    echo -n "$1$salt" | sha256sum | awk '{print $1}'
+}
+
+attempt=0
+max_attempts=3
+
+echo "Enter your email:"
+read email
+
+user_found=$(grep "$email" "$db_path")
+
+if [ -z "$user_found" ]; then
+    echo "Email not registered. Please register first."
+    sleep 1
+	./terminal.sh
+fi
+
+while [ "$attempt" -lt "$max_attempts" ]; do
+
+echo "Enter your password:"
+read -s password
+
+hashed_password=$(hashing "$password")
+
+if echo "$user_found" | grep -q "$hashed_password"; then
+    echo "Login successful!"
+    sleep 1
+    exec ./script/manager.sh
+else
+    echo "Invalid password. Please try again."
+    sleep 0
+	((attempt++))
+fi
+
+if [[ $attempt -eq $max_attempts ]]; then
+            echo "Too many failed attempts. Exiting..."
+            exit 1
+
+fi
+done
+}
+
+player.login
+```
+**e.** Setelah sukses login, "Player" perlu memiliki akses ke sistem pemantauan sumber daya. Sistem harus dapat melacak penggunaan CPU (dalam persentase)
+```
+ if echo "$user_found" | grep -q "$hashed_password"; then
+    echo "Login successful!"
+    sleep 1
+    exec ./script/manager.sh
+else
+    echo "Invalid password. Please try again."
+    sleep 0
+	((attempt++))
+fi
+```
+- **core_monitor.sh
+```
+#!/bin/bash
+
+cpu_usage=$(awk '{u=$2+$4; t=$2+$4+$5; if (NR==1){u1=u; t1=t;} else print ($2+$4-u1) * 100 / (t-t1) "%"; }' \
+<(grep 'cpu ' /proc/stat) <(sleep 1;grep 'cpu ' /proc/stat))
+
+cpu_model=$(lscpu | grep "Model name" | sed 's/Model name:\s*//')
+
+echo "[$(date)] - Penggunaan CPU: $cpu_usage% - Terminal Model [$cpu_model]"
+```
+**f.** Selain CPU, “fragments” juga perlu dipantau untuk memastikan equilibrium dunia “Arcaea”. RAM menjadi representasi dari “fragments” di dunia “Arcaea”, yang dimana dipantau dalam persentase usage, dan juga penggunaan RAM sekarang. 
+
+- **frag_monitor.sh**
+```
+  
+#!/bin/bash
+
+total_memory=$(grep "MemTotal" /proc/meminfo | awk '{print $2}')
+available_memory=$(grep "MemAvailable" /proc/meminfo | awk '{print $2}')
+used_memory=$((total_memory - available_memory))
+percentage_memory=$(awk "BEGIN {print ($used_memory / $total_memory) * 100}")
+
+total_memoryMB=$((total_memory/1024))
+available_memoryMB=$((available_memory/1024))
+used_memoryMB=$((used_memory/1024))
+
+
+echo "[$(date)] - Fragment Usage [$percentage_memory%] - Fragment Count [$used_memoryMB MB] - Details [Total: $total_memoryMB MB, Available: $available_memoryMB MB]"
+```
+**g.** Pemantauan yang teratur dan terjadwal sangat penting untuk mendeteksi anomali. Crontab manager (suatu menu) memungkinkan "Player" untuk mengatur jadwal pemantauan sistem. 
+Hal yang harus ada di fungsionalitas menu; Add/Remove CPU [Core] Usage, Add/Remove RAM [Fragment] Usage, View Active Jobs.
+- **manager.sh**
+```
+#!/bin/bash
+
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+CYAN='\033[1;36m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+script_cpu_monitor="/home/auriga/Documents/Praktikum_sisop-MODUL1/soal_2/script/core_monitor.sh"
+script_ram_monitor="/home/auriga/Documents/Praktikum_sisop-MODUL1/soal_2/script/frag_monitor.sh"
+
+interval="* * * * *"
+
+crontab.menu(){
+
+clear
+
+echo -e "${YELLOW}"
+echo                             "╔════════════════════════════════════╗"
+echo                             "║        WELCOME TO ARCAEA           ║"
+echo                             "║        CRONTAB MANAGEMENT          ║"
+echo                             "╚════════════════════════════════════╝"
+echo                             "======================================"
+echo                             "|           CHOOSE an OPTION         |"
+echo                             "======================================"
+echo                             "| 1. Add CPU Monitor                 |"
+echo                             "======================================"
+echo                             "| 2. Add RAM Monitor                 |"
+echo                             "======================================"
+echo                             "| 3. Remove CPU Monitor              |"
+echo                             "======================================"
+echo                             "| 4. Remove RAM Monitor              |"
+echo                             "======================================"
+echo                             "| 5. View Scheduled Monitoring Jobs  |"
+echo                             "======================================"
+echo                             "| 6. Exit                            |"
+echo                             "======================================"
+echo -e "${NC}"
+read -p "$(echo -e "${CYAN}Choose an option: ${NC}") " option
+
+
+case $option in
+        1) add_cpu_monitor ;;
+        2) add_ram_monitor ;;
+        3) remove_cpu_monitor ;;
+        4) remove_ram_monitor ;;
+        5) view_crontab ;;
+        6) echo -e "${RED}Exiting...${NC}" && exit 1 ;;
+        *) echo -e "${RED}Invalid option!${NC}" && sleep 1 && crontab.menu ;;
+    esac
+
+}
+
+add_cpu_monitor(){
+(crontab -l 2>/dev/null; echo "$interval bash $script_cpu_monitor  >> /home/auriga/Documents/Praktikum_sisop-MODUL1/soal_2/logs/core.log") | crontab -
+echo -e "${GREEN}CPU monitoring added!${NC}"
+sleep 1
+crontab.menu
+
+}
+
+add_ram_monitor() {
+(crontab -l 2>/dev/null; echo "$interval bash $script_ram_monitor >> /home/auriga/Documents/Praktikum_sisop-MODUL1/soal_2/logs/fragment.log") | crontab -
+echo -e "${GREEN}RAM monitoring added!${NC}"
+sleep 1
+crontab.menu
+
+}
+
+remove_cpu_monitor() {
+crontab -l | grep -v "$script_cpu_monitor" | crontab -
+echo -e "${YELLOW}CPU monitoring removed!${NC}"
+sleep 1
+crontab.menu
+
+}
+
+remove_ram_monitor() {
+crontab -l | grep -v "$script_ram_monitor" | crontab -
+echo -e "${YELLOW}RAM monitoring removed!${NC}"
+sleep 1
+crontab.menu
+
+}
+
+view_crontab() {
+echo -e "${CYAN}Current Scheduled Jobs:${NC}"
+    crontab -l
+    read -p "Press Enter to return..." 
+crontab.menu
+
+}
+
+crontab.menu
+```
+- Fungsi add/remove cpu
+```
+add_cpu_monitor(){
+(crontab -l 2>/dev/null; echo "$interval bash $script_cpu_monitor  >> /home/auriga/Documents/Praktikum_sisop-MODUL1/soal_2/logs/core.log") | crontab -
+echo -e "${GREEN}CPU monitoring added!${NC}"
+sleep 1
+crontab.menu
+
+remove_cpu_monitor() {
+crontab -l | grep -v "$script_cpu_monitor" | crontab -
+echo -e "${YELLOW}CPU monitoring removed!${NC}"
+sleep 1
+crontab.menu
+
+}
+```
+-Fungsi add/remove ram
+```
+add_ram_monitor() {
+(crontab -l 2>/dev/null; echo "$interval bash $script_ram_monitor >> /home/auriga/Documents/Praktikum_sisop-MODUL1/soal_2/logs/fragment.log") | crontab -
+echo -e "${GREEN}RAM monitoring added!${NC}"
+sleep 1
+crontab.menu
+
+remove_ram_monitor() {
+crontab -l | grep -v "$script_ram_monitor" | crontab -
+echo -e "${YELLOW}RAM monitoring removed!${NC}"
+sleep 1
+crontab.menu
+
+}
+```
+- view active jobs
+```
+view_crontab() {
+echo -e "${CYAN}Current Scheduled Jobs:${NC}"
+    crontab -l
+    read -p "Press Enter to return..." 
+crontab.menu
+
+}
+```
+**h.**  Membuat log file, core.log dan fragment.log di folder ./log/, yang dimana masing-masing terhubung ke program usage monitoring untuk usage tersebut. 
+```
+* * * * * bash /home/auriga/Documents/Praktikum_sisop-MODUL1/soal_2/script/core_monitor.sh >> /home/auriga/Documents/Praktikum_sisop-MODUL1/soal_2/logs/core.log
+* * * * * bash /home/auriga/Documents/Praktikum_sisop-MODUL1/soal_2/script/frag_monitor.sh >> /home/auriga/Documents/Praktikum_sisop-MODUL1/soal_2/logs/fragment.log
+# Output sample
+[Thu Mar 20 02:30:02 PM WIB 2025] - Core Usage [3,26633%%] - Terminal Model [AMD Ryzen 7 5800H with Radeon Graphics]
+[Thu Mar 20 02:31:01 PM WIB 2025] - Fragment Usage [38,2039%] - Fragment Count [5879 MB] - Details [Total: 15389 MB, Available: 9509 MB]
+```
+**i.**  Sistem harus memiliki antarmuka utama yang menggabungkan semua komponen. Ini akan menjadi titik masuk bagi "Player" untuk mengakses seluruh sistem. Buatlah shell script terminal.sh, yang berisi user flow berikut; Register, Login, Crontab manager (add/rem core & fragment usage) - Exit, Exit.
+```
+#!/bin/bash
+
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+BLUE='\033[1;34m'
+CYAN='\033[1;36m'
+YELLOW='\033[1;33m'
+MAGENTA='\033[1;35m'
+NC='\033[0m'
+
+clear
+
+animate_text() {
+    text="=======WELCOME TO THE ARCAEA SYSTEM======="
+    echo -ne "${YELLOW}"
+    for ((i=0; i<${#text}; i++)); do
+        echo -ne "${text:$i:1}"
+        sleep 0.1  # Waktu jeda antar huruf
+    done
+    echo -e "${NC}"
+}
+
+
+loading_animation() {
+    echo -ne "${CYAN}Loading"
+    for i in {1..3}; do
+        echo -ne "."
+        sleep 0.5
+    done
+    echo -e "${NC}"
+    sleep 0.5
+}
+
+echo -e "${MAGENTA}"
+echo " █████╗ ██████╗  ██████╗███████╗ █████╗"
+echo "██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗"
+echo "███████║██████╔╝██║     █████╗  ███████║"
+echo "██╔══██║██╔══██╗██║     ██╔══╝  ██╔══██║"
+echo "██╔══██║██╔══██╗██║     ██╔══╝  ██╔══██║"
+echo "██║  ██║██║  ██║╚██████╗███████╗██║  ██"
+echo " ═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚══════╝╚═╝  ╚═╝"
+echo -e "${NC}"
+echo -e "${YELLOW}"
+animate_text
+echo -e "${NC}"
+loading_animation
+
+while true; do
+
+ clear
+echo -e "${CYAN}"
+echo "╔════════════════════════════════════╗"
+echo "║              MAIN MENU             ║"
+echo "╠════════════════════════════════════╣"
+echo "║  1.Register                        ║"
+echo "║  2.Login                           ║"
+echo "║  3.Exit                            ║"
+echo "╚════════════════════════════════════╝"
+echo -e "${NC}"
+
+read -p "$(echo -e "${YELLOW}Choose an option: ${NC}") " choice
+
+case $choice in
+
+        1)
+	    echo -e "${GREEN}Redirecting to registration...${NC}"
+            sleep 1
+            ./register.sh
+            ;;
+        2)
+            echo -e "${BLUE}Redirecting to login...${NC}"
+            sleep 1
+            ./login.sh
+            ;;
+        3)
+            echo -e "${RED}Goodbye! T_T${NC}"
+            exit 0
+            ;;
+        *)
+            echo -e "${RED}Invalid option! Please choose again.${NC}"
+            sleep 1
+            ;;
+    esac
+done
+```
+
+
 
 # Soal 3
 Membuat file bernama dsotm.sh kemudian membuat script Bash bertema album The Dark Side of the Moon (Pink Floyd) dengan lima lagu pilihan:
