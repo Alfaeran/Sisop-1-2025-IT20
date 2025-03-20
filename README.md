@@ -669,7 +669,7 @@ fi
 track=$(echo "$1" | awk -F= '{print $2}' | tr -d '"')
 ```
 
-code tersebut berfungsi untuk memeriksa apakah pengguna sudah memasukkan lagu yang mau dijalankan atau belum. Kalau nggak ada input, script bakal muncul dan ngasih tahu cara pakainya dan juga daftar lagu yang bisa dipilih. Kalau ada input, kode bakal ngambil nama lagunya dari argumen yang diketik, biar bisa diproses lebih lanjut di script.
+code tersebut berfungsi untuk memeriksa apakah pengguna sudah memasukkan lagu yang mau dijalankan atau belum. Kalau tidak ada input, script akan muncul dan memberi tau cara pakainya dan juga daftar lagu yang bisa dipilih. Kalau ada input, kode bakal ngambil nama lagunya dari argumen yang diketik, agar bisa diproses lebih lanjut di script.
 
 
 **a. Speak to Me**
