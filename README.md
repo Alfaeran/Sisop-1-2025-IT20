@@ -669,7 +669,7 @@ fi
 track=$(echo "$1" | awk -F= '{print $2}' | tr -d '"')
 ```
 
-code tersebut berfungsi untuk memeriksa apakah pengguna sudah memasukkan lagu yang mau dijalankan atau belum. Kalau tidak ada input, script akan muncul dan memberi tau cara pakainya dan juga daftar lagu yang bisa dipilih. Kalau ada input, kode bakal ngambil nama lagunya dari argumen yang diketik, agar bisa diproses lebih lanjut di script.
+code ini berfungsi untuk memeriksa apakah pengguna sudah memasukkan lagu yang mau dijalankan atau belum. Kalau belum, script akan muncul dan memberi tau cara pakainya dan juga daftar lagu yang bisa dipilih. Kalau ada input, kode akan mengambil nama lagunya dari argumen yang diketik, agar bisa diproses lebih lanjut di script.
 
 
 **a. Speak to Me**
@@ -688,7 +688,7 @@ done
 }
 ```
 
-Kode ini menjalankan fitur Speak to Me, yang pertama-tama akan menampilkan teks "Playing Speak to Me" dalam warna kuning. Setelah itu, program akan terus mengambil kata-kata afirmasi dari API affirmations.dev setiap satu detik dan menampilkannya di terminal. Proses ini berjalan tanpa henti sampai pengguna menghentikannya secara manual
+Kode ini menjalankan fitur Speak to Me, yang pertama-tama akan menampilkan teks "Playing Speak to Me" dalam warna kuning. Setelah itu, program akan terus mengambil kata-kata afirmasi dari API affirmations.dev setiap satu detik dan menampilkannya di terminal. Proses ini berjalan tanpa henti sampai pengguna menghentikannya secara manual.
 
 
 **c. Time**
@@ -721,9 +721,9 @@ code ini menampilkan daftar 10 proses yang menggunakan memori terbesar di sistem
 
 
 
-**Revisi**
+**REVISI**
 
-**-** Pada bagian **'e. Brain Damage'** merubah tampilannya menjadi kustomisasi yang sebelumnnya masih tampilan secara deafult atau tanpa custom
+**1.** Pada bagian **'e. Brain Damage'** merubah tampilannya menjadi kustomisasi yang sebelumnnya masih tampilan secara deafult atau tanpa custom
 
 ```
 brain_damage() {
@@ -744,7 +744,7 @@ done
 sekarang tampilannya berubah dengan garis pemisah berwarna kuning di bagian atas dan bawah diantara "PID     USER       %CPU   %MEM   COMMAND", serta setiap baris proses ditampilkan dengan warna selang-seling yakni biru dan ungu.
 
 
-**- Menambahkan bagian yang belum selesai yakni b. On the Run dan e. Money**
+**2. Menambahkan bagian yang belum selesai yakni b. On the Run dan e. Money**
 
 **b. On the Run**
 ```
